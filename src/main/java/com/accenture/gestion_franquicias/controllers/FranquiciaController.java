@@ -41,4 +41,10 @@ public class FranquiciaController {
         Sucursal sucursal = franquiciaService.agregarProducto(franquiciaId, sucursalId, producto);
         return new ResponseEntity<>(sucursal, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}")
+    public ResponseEntity<Sucursal> eliminarProducto(@PathVariable Long franquiciaId, @PathVariable Long sucursalId, @PathVariable Long productoId) {
+        Sucursal sucursal = franquiciaService.eliminarProducto(franquiciaId, sucursalId, productoId);
+        return new ResponseEntity<>(sucursal, HttpStatus.OK);
+    }
 }
