@@ -1,5 +1,6 @@
 package com.accenture.gestion_franquicias.services;
 
+import com.accenture.gestion_franquicias.dtos.MasProductosPorSucursal;
 import com.accenture.gestion_franquicias.entities.Franquicia;
 import com.accenture.gestion_franquicias.entities.Producto;
 import com.accenture.gestion_franquicias.entities.Sucursal;
@@ -7,6 +8,9 @@ import com.accenture.gestion_franquicias.repositories.FranquiciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -115,5 +119,30 @@ public class FranquiciaService {
         }else{
             throw new RuntimeException("No se encontro la franquicia");
         }
+    }
+
+    public List<MasProductosPorSucursal> obtenerProductoConMasCantidadPorSucursal() {
+        List<Franquicia> franquicias = franquiciaRepository.findAll();
+        List<MasProductosPorSucursal> resultado = new ArrayList<>();
+
+        for (Franquicia franquicia : franquicias) {
+            for (Sucursal sucursal : franquicia.getSucursales()) {
+
+                Optional<Producto> productoConMasCantidad = sucursal.getProductos()
+                        .stream()
+                        .max(Comparator.comparingInt(Producto::getCantidad));
+
+                if (productoConMasCantidad.isPresent()) {
+                    Producto producto = productoConMasCantidad.get();
+                    MasProductosPorSucursal dto = new MasProductosPorSucursal(
+                            sucursal.getNombre(),
+                            producto.getNombre(),
+                            producto.getCantidad()
+                    );
+                    resultado.add(dto);
+                }
+            }
+        }
+        return resultado;
     }
 }

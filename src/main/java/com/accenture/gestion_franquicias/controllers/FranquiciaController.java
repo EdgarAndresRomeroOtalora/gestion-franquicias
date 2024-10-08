@@ -1,5 +1,6 @@
 package com.accenture.gestion_franquicias.controllers;
 
+import com.accenture.gestion_franquicias.dtos.MasProductosPorSucursal;
 import com.accenture.gestion_franquicias.entities.Franquicia;
 import com.accenture.gestion_franquicias.entities.Producto;
 import com.accenture.gestion_franquicias.entities.Sucursal;
@@ -52,5 +53,11 @@ public class FranquiciaController {
     public ResponseEntity<Producto> modificarStockProducto(@PathVariable Long franquiciaId, @PathVariable Long sucursalId, @PathVariable Long productoId, @RequestBody Integer cantidad) {
         Producto producto = franquiciaService.modificarStockProducto(franquiciaId, sucursalId, productoId, cantidad);
         return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
+
+    @GetMapping("/sucursales/producto-max")
+    public ResponseEntity<List<MasProductosPorSucursal>> listaSucursales(){
+        List<MasProductosPorSucursal> lista = franquiciaService.obtenerProductoConMasCantidadPorSucursal();
+        return ResponseEntity.ok(lista);
     }
 }
