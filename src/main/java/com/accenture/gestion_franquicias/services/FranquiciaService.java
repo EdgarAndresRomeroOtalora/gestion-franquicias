@@ -145,4 +145,60 @@ public class FranquiciaService {
         }
         return resultado;
     }
+
+    public Franquicia actualizarNombreFranquicia(Long franquiciaId, String nombre){
+        Franquicia franquicia = getFranquiciaById(franquiciaId);
+        franquicia.setNombre(nombre);
+        return franquiciaRepository.save(franquicia);
+    }
+
+    public Sucursal actualizarNombreSucursal(Long franquiciaId, Long sucursalId, String nombre){
+        Franquicia franquicia = getFranquiciaById(franquiciaId);
+        Sucursal sucursal = getSucursalById(franquicia, sucursalId);
+        sucursal.setNombre(nombre);
+        franquiciaRepository.save(franquicia);
+        return sucursal;
+    }
+
+    public Producto actualizarNombreProducto(Long franquiciaId, Long sucursalId, Long productoId, String nombre){
+        Franquicia franquicia = getFranquiciaById(franquiciaId);
+        Sucursal sucursal = getSucursalById(franquicia, sucursalId);
+        Producto producto = getProductoById(sucursal, productoId);
+        producto.setNombre(nombre);
+        franquiciaRepository.save(franquicia);
+        return producto;
+    }
+
+    private Franquicia getFranquiciaById(Long franquiciaId){
+        Optional<Franquicia> franquiciaOptional = franquiciaRepository.findById(franquiciaId);
+        if (franquiciaOptional.isPresent()) {
+            return franquiciaOptional.get();
+        }else{
+            throw new RuntimeException("No se encontro la franquicia");
+        }
+    }
+
+    private Sucursal getSucursalById(Franquicia franquicia, Long sucursalId){
+        Optional<Sucursal> sucursalOptional = franquicia.getSucursales()
+                .stream()
+                .filter(sucursal -> sucursal.getId().equals(sucursalId))
+                .findFirst();
+        if(sucursalOptional.isPresent()) {
+            return sucursalOptional.get();
+        }else{
+            throw new RuntimeException("No se encontro la sucursal");
+        }
+    }
+
+    private Producto getProductoById(Sucursal sucursal, Long productoId){
+        Optional<Producto> productoOptional = sucursal.getProductos()
+                .stream()
+                .filter(producto -> producto.getId().equals(productoId))
+                .findFirst();
+        if (productoOptional.isPresent()) {
+            return productoOptional.get();
+        }else{
+            throw new RuntimeException("No se encontro el producto");
+        }
+    }
 }

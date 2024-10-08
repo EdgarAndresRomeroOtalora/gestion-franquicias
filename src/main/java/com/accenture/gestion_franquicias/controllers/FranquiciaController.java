@@ -60,4 +60,22 @@ public class FranquiciaController {
         List<MasProductosPorSucursal> lista = franquiciaService.obtenerProductoConMasCantidadPorSucursal();
         return ResponseEntity.ok(lista);
     }
+
+    @PutMapping("/{franquiciaId}/nombre")
+    public ResponseEntity<Franquicia> actualizarNombreFranquicia(@PathVariable Long franquiciaId, @RequestBody String nombre){
+        Franquicia franquicia = franquiciaService.actualizarNombreFranquicia(franquiciaId, nombre);
+        return new ResponseEntity<>(franquicia, HttpStatus.OK);
+    }
+
+    @PutMapping("/{franquiciaId}/sucursales/{sucursalId}/nombre")
+    public ResponseEntity<Sucursal> actualizarNombreSucursal(@PathVariable Long franquiciaId, @PathVariable Long sucursalId, @RequestBody String nombre){
+        Sucursal sucursal = franquiciaService.actualizarNombreSucursal(franquiciaId, sucursalId, nombre);
+        return new ResponseEntity<>(sucursal, HttpStatus.OK);
+    }
+
+    @PutMapping("/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}/nombre")
+    public ResponseEntity<Producto> actualizarNombreProducto(@PathVariable Long franquiciaId, @PathVariable Long sucursalId, @PathVariable Long productoId, @RequestBody String nombre){
+        Producto producto = franquiciaService.actualizarNombreProducto(franquiciaId, sucursalId, productoId, nombre);
+        return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
 }
