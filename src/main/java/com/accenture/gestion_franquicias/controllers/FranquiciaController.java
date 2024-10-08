@@ -47,4 +47,10 @@ public class FranquiciaController {
         Sucursal sucursal = franquiciaService.eliminarProducto(franquiciaId, sucursalId, productoId);
         return new ResponseEntity<>(sucursal, HttpStatus.OK);
     }
+
+    @PutMapping("/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}/cantidad")
+    public ResponseEntity<Producto> modificarStockProducto(@PathVariable Long franquiciaId, @PathVariable Long sucursalId, @PathVariable Long productoId, @RequestBody Integer cantidad) {
+        Producto producto = franquiciaService.modificarStockProducto(franquiciaId, sucursalId, productoId, cantidad);
+        return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
 }

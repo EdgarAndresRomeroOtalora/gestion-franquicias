@@ -85,4 +85,35 @@ public class FranquiciaService {
             throw new RuntimeException("No se encontro la franquicia");
         }
     }
+
+    public Producto modificarStockProducto(Long franquiciaId, Long sucursalId, Long productoId, int cantidad){
+        Optional<Franquicia> franquiciaOptional = franquiciaRepository.findById(franquiciaId);
+        if (franquiciaOptional.isPresent()) {
+            Franquicia franquicia = franquiciaOptional.get();
+            Optional<Sucursal> sucursalOptional = franquicia.getSucursales()
+                    .stream()
+                    .filter(sucursal -> sucursal.getId().equals(sucursalId))
+                    .findFirst();
+            if(sucursalOptional.isPresent()){
+                Sucursal sucursal = sucursalOptional.get();
+                Optional<Producto> productoOptional = sucursal.getProductos()
+                        .stream()
+                        .filter(producto -> producto.getId().equals(productoId))
+                        .findFirst();
+                if (productoOptional.isPresent()) {
+                    Producto producto = productoOptional.get();
+                    producto.setCantidad(cantidad);
+                    franquiciaRepository.save(franquicia);
+
+                    return producto;
+                } else {
+                    throw new RuntimeException("Producto no encontrado en la sucursal");
+                }
+            }else{
+                throw new RuntimeException("No se encontro la sucursal");
+            }
+        }else{
+            throw new RuntimeException("No se encontro la franquicia");
+        }
+    }
 }
